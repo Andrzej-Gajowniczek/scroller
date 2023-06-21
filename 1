@@ -1,0 +1,20 @@
+    JSON Web Tokens (JWT): JWT is a widely adopted authentication method that allows secure transmission of information between parties as a JSON object. Go provides libraries like github.com/dgrijalva/jwt-go and github.com/golang-jwt/jwt for working with JWT.
+
+    OAuth/OAuth2: OAuth and OAuth2 are widely used authentication frameworks that allow users to grant third-party applications access to their resources without sharing their credentials. Go provides libraries like golang.org/x/oauth2 and github.com/markbates/goth for implementing OAuth and OAuth2 authentication.
+
+    Basic Authentication: Basic Authentication is a simple authentication method where the client sends the username and password encoded in the "Authorization" header of the HTTP request. Go's standard library provides built-in support for Basic Authentication using the net/http package.
+
+    Token-based Authentication: Token-based authentication involves issuing a unique token to each authenticated user, which is then sent with subsequent requests to authenticate the user. Go frameworks like Gorilla Toolkit (github.com/gorilla/sessions) and Echo (github.com/labstack/echo) provide support for token-based authentication.
+
+    Session-based Authentication: Session-based authentication involves storing user session data on the server and sending a session identifier to the client for subsequent requests. Go frameworks like Gorilla Toolkit (github.com/gorilla/sessions) and Gin (github.com/gin-gonic/gin) provide session management capabilities.
+
+
+
+Pytanie też o autentykację z czego kożystacie:
+JWT, 0Auth/OAuth2, Token-based Authentication(Gorilla)
+Session-based Authentication(Gorilla lub Gin)
+Rozumiem że to wszystko dzieje się w przegladarce więc czy jakiś framework czy własny?
+Nie żebym się tu chciał popisywać mądrymi słowkami ale tego jest od groma więc warto ustalić co potrzebne a co nie, bo na każdy pakiet trzeba trochę czasu na zgłębienie dokumentacji i  rozgrzewkę.
+Ja i tak postanowiłem zajmować się programowaniem w Go do emerytury, więc nie ważne czy hobbystycznie czy zawodowo. Jakaś choć podstawowa dokumentacja przybliżyłaby mi czego używacie.
+
+
