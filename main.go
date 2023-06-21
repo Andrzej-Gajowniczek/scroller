@@ -3,9 +3,32 @@ package main
 import (
 	_ "embed"
 	"fmt"
+	"log"
 	"strings"
 	"time"
+
+	"github.com/nsf/termbox-go"
 )
+
+var at = termbox.SetCell
+
+func printAt(x, y int, s string, colors ...termbox.Attribute) {
+	ink, bg := termbox.ColorDefault, termbox.ColorDefault
+	switch len(colors) {
+	case 1:
+		ink = colors[0]
+		bg = termbox.ColorDefault
+	case 2:
+		ink = colors[0]
+		bg = colors[1]
+	default:
+
+	}
+
+	for i, c := range s {
+		at(x+i, y, c, ink, bg)
+	}
+}
 
 //go:embed "data/small8.64c"
 var data []byte
@@ -74,6 +97,7 @@ func makeSemigraphic(subString string) string {
 	subString = strings.ReplaceAll(subString, "L", `▌`)
 	return subString
 }
+
 func main() {
 
 	message := "KOCHAM PAULINKE MOJA ZONE"
@@ -93,48 +117,69 @@ func main() {
 			onScreenBuffer[i] += c
 		}
 	}
-	fmt.Println(onScreenBuffer)
+
 	var duplicatShifter = []string{"", "", "", "", "", "", "", ""}
 	for i, msg := range onScreenBuffer {
 
 		alternative := createAlternativeString(msg)
 		duplicatShifter[i] += alternative
+	}
+
+	err := termbox.Init()
+	if err != nil {
+		log.Fatal("kicha z termboksem", err)
+	}
+	defer termbox.Close()
+	//
+
+	xMax, yMax := termbox.Size()
+	infoXY := fmt.Sprintf("x:%3d; y:%3d", xMax, yMax)
+	printAt(0, 0, infoXY, termbox.ColorDefault, termbox.ColorDefault)
+	/*
+		for c := 0; c < 32; c++ {
+			printAt(0, 1+c, "Eliza", termbox.Attribute(c), 0)
+		}
+		printAt(10, 10, "Migotka", termbox.AttrBlink|termbox.ColorLightCyan)
+		at(12, 10, '*', 0, termbox.ColorDefault)
+		termbox.Flush()
+		termbox.SetFg(12, 10, termbox.ColorLightMagenta)
+	*/
+	termbox.Sync()
+	customBuffer := make([][]termbox.Cell, len(onScreenBuffer))
+	for i := range customBuffer {
+		customBuffer[i] = make([]termbox.Cell, len(onScreenBuffer[0]))
+	}
+	customBuffer2 := customBuffer
+	copy(customBuffer, customBuffer2)
+
+	rozmiarBufora := fmt.Sprintf("len(customBuffer2):%v", len(customBuffer2)*len(customBuffer2[0]))
+	printAt(20, 20, rozmiarBufora)
+	termbox.Sync()
+
+	//copy strings from onScreenBuffer -> customeBuffer of type termbox.Cell
+	for yy, s := range onScreenBuffer {
+		r := []rune(makeSemigraphic(s))
+		for xx, rr := range r {
+			customBuffer[yy][xx].Ch = rr
+		}
+	}
+	//copy customBuffer to internalBuffer of termbox
+
+	for {
+		for yy := 0; yy < 8; yy++ {
+			for xx := 0; xx < xMax; xx++ {
+				termbox.SetCell(xx, yy, customBuffer[yy][xx].Ch, termbox.ColorDefault, termbox.ColorDefault)
+			}
+		}
+		termbox.Sync()
+		time.Sleep(time.Millisecond * (1000 / 60))
+
+		eV := termbox.PollRawEvent()
+
+		if eV.Key == termbox.KeyEsc {
+			return
+
+		}
 
 	}
-	fmt.Println(duplicatShifter)
-
-	//var camoBuffer [8][]rune
-	//fmt.Println(camoBuffer, reflect.TypeOf(camoBuffer))
-	for p := 0; p < (8 * len(message)); p++ {
-
-		for _, info := range onScreenBuffer {
-			//runeStartIndex := utf8.RuneCountInString(info[:p])
-			//subString := []rune(info)[runeStartIndex:]
-			subString := info[0:p]
-			subString = strings.ReplaceAll(subString, "0", ` `)
-			subString = strings.ReplaceAll(subString, "1", `█`)
-
-			fmt.Println(string(subString))
-		}
-		time.Sleep(1000 * time.Millisecond / 30)
-
-		for _, info := range duplicatShifter {
-			//runeStartIndex := utf8.RuneCountInString(info[:p])
-			//subString := []rune(info)[runeStartIndex:]
-			subString := info[0:p]
-			subString = strings.ReplaceAll(subString, "0", ` `)
-			subString = strings.ReplaceAll(subString, "1", `█`)
-			subString = strings.ReplaceAll(subString, "R", `▐`)
-
-			subString = strings.ReplaceAll(subString, "L", `▌`)
-			fmt.Println(string(subString))
-		}
-
-		time.Sleep(1000 * time.Millisecond / 30)
-	}
-	testówka := "00011000010011011010101111"
-	fmt.Println(makeSemigraphic(testówka))
-	fmt.Println(makeSemigraphic(createAlternativeString(testówka)))
-	//	}
-
 }
