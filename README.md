@@ -27,3 +27,6 @@ pass: 19390901
 
 Good luck and remember : Go With Andy!
 Cheers!
+
+Contact info:
+https://www.linkedin.com/in/andrzej-gajowniczek-5a6564b/
