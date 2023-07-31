@@ -472,13 +472,12 @@ func main() {
 	}
 
 	var chessy chess
-q
 	chessy.xx = 0
 	chessy.yy = 0
 	chessy.ty = 8
 	chessy.tx = 14
-	chessy.c1 = 
-	chessy.c2 = 
+	chessy.c1 = 0
+	chessy.c2 = 1
 	chessy.xMax, chessy.yMax = termbox.Size()
 	//create scroller struct
 	var sc scroller
