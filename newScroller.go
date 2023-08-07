@@ -16,7 +16,7 @@ import (
 //go:embed "data/small8.64c"
 var data []byte
 
-// this func input Ascii capital letter byte code and returns 8x8 font consist of 0 and 1 - 8 strings by 8x Zeros or Ones
+// renderChar func input Ascii capital letter byte code and returns 8x8 font consist of 0 and 1 - 8 strings by 8x Zeros or Ones
 func renderChar(b byte) *[]string {
 
 	var items = []rune{
@@ -84,13 +84,11 @@ type scroller struct {
 	messageBuferCells   [][][]termbox.Cell  //two buffers consist of termbox cells
 	xMax                int
 	yMax                int
-	progress            int
 	index               int
 	interval            int
 	lcx                 int
 	lcy                 int
 	rcx                 int
-	rcy                 int
 	frame               int
 	speed               int
 }
@@ -472,15 +470,16 @@ func main() {
 	}
 
 	var chessy chess
-q
+
 	chessy.xx = 0
 	chessy.yy = 0
 	chessy.ty = 8
 	chessy.tx = 14
-	chessy.c1 = 
-	chessy.c2 = 
+	chessy.c1 = 1
+	chessy.c2 = 9
 	chessy.xMax, chessy.yMax = termbox.Size()
 	//create scroller struct
+	//var scTab []scroller
 	var sc scroller
 	var sc2, sc3 scroller
 	info := "                                          Hi !            " +
@@ -516,6 +515,8 @@ q
 	sc.lcx = 0 //left corner x coordinate
 	sc2.lcx = 0
 	sc3.lcx = 0
+
+	//func ifResolutonChanges(){}
 	sc2.lcy = (sc.yMax-8)/2 - 5 //left corner y coordinate
 	sc.lcy = (sc.yMax - 8) / 2
 	sc3.lcy = (sc.yMax-8)/2 + 5
@@ -523,6 +524,7 @@ q
 	sc.rcx = sc.xMax //right corner x max coordinate
 	sc2.rcx = sc.xMax
 	sc3.rcx = sc.xMax
+	//}()
 	//printAt(10, 20, 2, "to jest sc.rcx:%d\n", sc.rcx)
 	sc.frame = 0
 	sc2.frame = 0
@@ -561,6 +563,7 @@ q
 	//direction := 1
 	go func() {
 		for {
+			start := time.Now()
 			sc.scrolling()
 			sc2.scrolling()
 			sc3.scrolling()
@@ -586,8 +589,12 @@ q
 						chessy.yy = chessy.yy + chessy.ty
 					}*/
 			// termbox.Clear(termbox.ColorDefault, 0) ; just testing. Now it's unnecessary
-
-			time.Sleep(time.Millisecond * time.Duration(sc.interval))
+			duration := time.Since(start)
+			spent := duration.Microseconds()
+			//spent = spent
+			wait := time.Duration(33333-spent) * time.Microsecond
+			time.Sleep(wait)
+			//time.Sleep(time.Millisecond * time.Duration(sc.interval))
 		}
 	}()
 
