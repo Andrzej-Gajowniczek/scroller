@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
-	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -615,8 +614,8 @@ func main() {
 				// Handle mouse event
 				// ...
 			case termbox.EventResize:
-				termbox.Close()
-				os.Exit(0)
+				//termbox.Close()
+				//os.Exit(0)
 			}
 
 			// Perform other operations based on the event if any ...
